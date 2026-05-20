@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   disable: process.env.NODE_ENV === 'development',
@@ -12,6 +13,9 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Setting empty object as per TIP in the error message
+  // @ts-ignore
+  turbopack: {},
 };
 
 module.exports = withPWA(nextConfig);
