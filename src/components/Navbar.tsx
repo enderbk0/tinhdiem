@@ -21,10 +21,10 @@ export const Navbar: React.FC = () => {
   const isDark = resolvedTheme === 'dark';
 
   return (
-    <>
-      {/* Left Island: Back + Logo + Title */}
-      <div className="fixed top-4 left-4 z-50 pointer-events-none">
-        <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl border border-gray-200/50 dark:border-gray-700/50 rounded-full pl-2 pr-5 h-12 flex items-center gap-3 shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto transition-all">
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-3xl px-4 pointer-events-none">
+      <div className="flex justify-between items-center w-full">
+        {/* Left Island: Back + Logo + Title */}
+        <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl border border-gray-200/50 dark:border-gray-700/50 rounded-full pl-1.5 pr-5 h-12 flex items-center gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto transition-all">
           <Button
             variant="ghost"
             size="sm"
@@ -35,12 +35,13 @@ export const Navbar: React.FC = () => {
           </Button>
           
           <div className="flex items-center gap-2">
-            <div className="relative w-7 h-7 flex items-center justify-center bg-gray-50 dark:bg-gray-800 rounded-full p-1 shadow-sm border border-gray-100 dark:border-gray-700">
+            {/* Logo standing alone, no circle background */}
+            <div className="relative w-7 h-7 flex items-center justify-center">
               <Image 
                 src="/tinhdiem/enderbk'slabs.png" 
                 alt="Logo" 
-                width={24} 
-                height={24}
+                width={28} 
+                height={28}
                 className="object-contain"
                 priority
                 onError={(e) => {
@@ -56,10 +57,8 @@ export const Navbar: React.FC = () => {
             </h1>
           </div>
         </nav>
-      </div>
 
-      {/* Right Island: Theme Toggle */}
-      <div className="fixed top-4 right-4 z-50 pointer-events-none">
+        {/* Right Island: Theme Toggle */}
         <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl border border-gray-200/50 dark:border-gray-700/50 rounded-full w-12 h-12 flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto transition-all">
           <Button
             variant="ghost"
@@ -74,6 +73,6 @@ export const Navbar: React.FC = () => {
           </Button>
         </nav>
       </div>
-    </>
+    </div>
   );
 };
