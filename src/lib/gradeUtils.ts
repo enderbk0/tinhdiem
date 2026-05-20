@@ -7,16 +7,25 @@ export const round = (num: number, decimal: number = 1): number => {
 
 export const calculateSubjectAvg = (entry: ScoreEntry, mode: 'detailed' | 'simple' = 'detailed'): number | null => {
   if (mode === 'simple') {
-    return typeof entry.gk === 'string' ? parseFloat(entry.gk) : entry.gk;
+    const val = typeof entry.gk === 'string' ? parseFloat(entry.gk) : entry.gk;
+    if (val === null || isNaN(val)) return null;
+    return Math.min(10, Math.max(0, val));
   }
   
-  const txScores = entry.tx.map(v => typeof v === 'string' ? parseFloat(v) : v).filter(v => !isNaN(v));
-  const gk = typeof entry.gk === 'string' ? parseFloat(entry.gk) : entry.gk;
-  const ck = typeof entry.ck === 'string' ? parseFloat(entry.ck) : entry.ck;
+  const txScores = entry.tx
+    .map(v => typeof v === 'string' ? parseFloat(v) : v)
+    .filter(v => !isNaN(v))
+    .map(v => Math.min(10, Math.max(0, v)));
+
+  let gk = typeof entry.gk === 'string' ? parseFloat(entry.gk) : entry.gk;
+  let ck = typeof entry.ck === 'string' ? parseFloat(entry.ck) : entry.ck;
 
   if (txScores.length === 0 || gk === null || ck === null || isNaN(gk) || isNaN(ck)) {
     return null;
   }
+
+  gk = Math.min(10, Math.max(0, gk));
+  ck = Math.min(10, Math.max(0, ck));
 
   const sumTX = txScores.reduce((acc, v) => acc + v, 0);
   const avg = (sumTX + gk * 2 + ck * 3) / (txScores.length + 5);

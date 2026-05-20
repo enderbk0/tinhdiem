@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { Subject, ScoreEntry } from '@/types';
-import { Button } from '@/components/ui/Button';
-import { Plus, Minus, Info } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { calculateSubjectAvg } from '@/lib/gradeUtils';
 import { useGradeStore } from '@/store/useGradeStore';
@@ -19,10 +18,35 @@ export const SubjectRow: React.FC<SubjectRowProps> = ({ subject, semester, entry
   const { inputMode } = useGradeStore();
   const avg = subject.type === 'score' ? calculateSubjectAvg(entry, inputMode) : null;
 
+  const validateAndSet = (value: string, callback: (v: string) => void) => {
+    if (value === '') {
+      callback('');
+      return;
+    }
+
+    // Replace comma with dot for consistency
+    const sanitized = value.replace(',', '.');
+    
+    // Check if it's a valid number format (allows decimals)
+    if (/^\d*\.?\d*$/.test(sanitized)) {
+      const num = parseFloat(sanitized);
+      if (!isNaN(num)) {
+        // Clamp between 0 and 10
+        if (num < 0) callback('0');
+        else if (num > 10) callback('10');
+        else callback(sanitized);
+      } else {
+        callback(sanitized);
+      }
+    }
+  };
+
   const handleTXChange = (index: number, value: string) => {
-    const newTX = [...entry.tx];
-    newTX[index] = value;
-    onUpdate({ tx: newTX });
+    validateAndSet(value, (v) => {
+      const newTX = [...entry.tx];
+      newTX[index] = v;
+      onUpdate({ tx: newTX });
+    });
   };
 
   const addTX = () => {
@@ -83,7 +107,7 @@ export const SubjectRow: React.FC<SubjectRowProps> = ({ subject, semester, entry
                       <input
                         type="text"
                         value={entry.gk || ''}
-                        onChange={(e) => onUpdate({ gk: e.target.value })}
+                        onChange={(e) => validateAndSet(e.target.value, (v) => onUpdate({ gk: v }))}
                         className="w-10 h-8 text-center text-xs font-bold bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-lg focus:border-blue-500 outline-none transition-all"
                         placeholder="GK"
                       />
@@ -93,8 +117,8 @@ export const SubjectRow: React.FC<SubjectRowProps> = ({ subject, semester, entry
                       <input
                         type="text"
                         value={entry.ck || ''}
-                        onChange={(e) => onUpdate({ ck: e.target.value })}
-                        className="w-10 h-8 text-center text-xs font-bold bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-lg focus:border-purple-500 outline-none transition-all"
+                        onChange={(e) => validateAndSet(e.target.value, (v) => onUpdate({ ck: v }))}
+                        className="w-10 h-8 text-center text-xs font-bold bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-lg focus:border-blue-500 outline-none transition-all"
                         placeholder="CK"
                       />
                     </div>
@@ -106,7 +130,7 @@ export const SubjectRow: React.FC<SubjectRowProps> = ({ subject, semester, entry
                   <input
                     type="text"
                     value={entry.gk || ''}
-                    onChange={(e) => onUpdate({ gk: e.target.value })}
+                    onChange={(e) => validateAndSet(e.target.value, (v) => onUpdate({ gk: v }))}
                     className="max-w-[100px] h-8 px-2 text-xs font-bold bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-lg focus:border-blue-500 outline-none transition-all"
                     placeholder="0.0"
                   />
