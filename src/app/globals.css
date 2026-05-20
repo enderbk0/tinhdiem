@@ -2,8 +2,9 @@
 
 @theme {
   --font-sans: var(--font-inter);
-  @variant dark (&:where(.dark, .dark *));
 }
+
+@variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
