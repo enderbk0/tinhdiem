@@ -7,7 +7,7 @@ import { Button } from './ui/Button';
 import Image from 'next/image';
 
 export const Navbar: React.FC = () => {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -31,11 +31,10 @@ export const Navbar: React.FC = () => {
             onClick={() => window.location.href = 'https://enderbk.is-cool.dev/labs'}
             className="p-2 h-9 w-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all active:scale-90"
           >
-            <ArrowLeft size={20} className="text-gray-600 dark:text-gray-300" />
+            <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
           </Button>
           
           <div className="flex items-center gap-2">
-            {/* Logo standing alone, no circle background */}
             <div className="relative w-7 h-7 flex items-center justify-center">
               <Image 
                 src="/tinhdiem/enderbk'slabs.png" 
@@ -63,12 +62,12 @@ export const Navbar: React.FC = () => {
           <Button
             variant="ghost"
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="h-12 w-12 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center group"
+            className="h-12 w-12 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center group bg-gray-50/50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700"
           >
             {isDark ? (
-              <Sun size={28} className="text-yellow-400 fill-yellow-400/20 transition-transform group-hover:rotate-45" />
+              <Sun className="w-7 h-7 text-yellow-400 fill-yellow-400/20 transition-transform group-hover:rotate-45 block" />
             ) : (
-              <Moon size={24} className="text-blue-600 fill-blue-600/10 transition-transform group-hover:-rotate-12" />
+              <Moon className="w-6 h-6 text-blue-600 fill-blue-600/10 transition-transform group-hover:-rotate-12 block" />
             )}
           </Button>
         </nav>
