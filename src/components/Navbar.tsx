@@ -24,20 +24,28 @@ export const Navbar: React.FC = () => {
 
         {/* Logo & Title centered */}
         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <div className="flex items-center gap-1.5">
-            <div className="relative w-6 h-6">
+          <div className="flex items-center gap-1">
+            {/* Logo Icon */}
+            <div className="relative w-7 h-7 flex items-center justify-center">
               <Image 
-                src="/tinhdiem/logo.png" 
-                alt="Logo" 
-                width={24} 
-                height={24}
-                className="dark:invert"
+                src="/tinhdiem/enderbk'slabs.png" 
+                alt="Logo Icon" 
+                width={28} 
+                height={28}
+                className="object-contain"
                 onError={(e) => (e.currentTarget.style.display = 'none')}
               />
             </div>
-            <div className="flex flex-col -space-y-1">
-              <span className="text-[10px] font-black uppercase text-gray-400 leading-none">EnderBK&apos;s</span>
-              <span className="text-sm font-black text-gray-900 dark:text-white leading-none">Labs</span>
+            {/* Logo Text - This IS elabstext.png */}
+            <div className="relative h-6 w-24">
+              <Image 
+                src="/tinhdiem/elabstext.png" 
+                alt="EnderBK's Labs" 
+                fill
+                className="object-contain dark:invert"
+                priority
+                onError={(e) => (e.currentTarget.style.display = 'none')}
+              />
             </div>
           </div>
           <div className="h-4 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1" />
