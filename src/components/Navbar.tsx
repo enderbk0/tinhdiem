@@ -7,82 +7,77 @@ import { Button } from './ui/Button';
 import Image from 'next/image';
 
 export const Navbar: React.FC = () => {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch for theme-dependent icons
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return (
-      <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between" />
-      </nav>
-    );
+    return <div className="h-20" />; // Spacer for fixed island
   }
 
-  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const isDark = resolvedTheme === 'dark';
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-      <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between relative">
-        {/* Back Button */}
-        <div className="flex items-center">
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-2xl pointer-events-none">
+      <nav className="bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl border border-gray-200/50 dark:border-gray-800/50 rounded-full px-2 h-12 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto transition-colors duration-300">
+        {/* Left: Back & Logo */}
+        <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => window.location.href = 'https://enderbk.is-cool.dev/labs'}
-            className="p-2 h-9 w-9 rounded-full"
+            className="p-2 h-9 w-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all active:scale-90"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} className="text-gray-500 dark:text-gray-400" />
           </Button>
-        </div>
-
-        {/* Logo & Title centered */}
-        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            {/* Logo Icon */}
+          
+          <div className="flex items-center gap-2 pl-1">
             <div className="relative w-7 h-7 flex items-center justify-center">
               <Image 
                 src="/tinhdiem/enderbk'slabs.png" 
-                alt="Logo Icon" 
+                alt="Logo" 
                 width={28} 
                 height={28}
                 className="object-contain"
                 priority
-              />
-            </div>
-            {/* Logo Text - elabstext.png */}
-            <div className="relative h-6 w-24">
-              <Image 
-                src="/tinhdiem/elabstext.png" 
-                alt="EnderBK's Labs" 
-                fill
-                className="object-contain dark:invert"
-                priority
+                onError={(e) => {
+                  // Fallback to relative path if absolute fails
+                  const img = e.target as HTMLImageElement;
+                  if (!img.src.includes('tinhdiem/tinhdiem')) {
+                     img.src = "enderbk'slabs.png"; 
+                  }
+                }}
               />
             </div>
           </div>
-          <div className="h-4 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1" />
-          <h1 className="text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-nowrap hidden sm:block">
+        </div>
+
+        {/* Center: Title */}
+        <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">
+          <h1 className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500">
             Tính điểm
           </h1>
         </div>
 
-        {/* Theme Switcher */}
-        <div className="flex items-center">
+        {/* Right: Theme Switcher */}
+        <div className="flex items-center pr-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="rounded-full w-9 h-9 p-0"
+            className="h-9 w-9 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all active:rotate-45"
           >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+            {isDark ? (
+              <Sun size={18} className="text-yellow-400 fill-yellow-400/20" />
+            ) : (
+              <Moon size={18} className="text-blue-500 fill-blue-500/10" />
+            )}
           </Button>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 };

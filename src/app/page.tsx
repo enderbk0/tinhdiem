@@ -29,7 +29,7 @@ export default function Home() {
     <main className="min-h-screen flex flex-col">
       <Navbar />
       
-      <div className="flex-1 max-w-3xl mx-auto w-full px-4 py-4 md:py-8">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-4 pt-20 pb-8 md:pt-24">
         {/* Progress Section */}
         <div className="mb-6 space-y-2">
           <ProgressBar progress={progress} />
