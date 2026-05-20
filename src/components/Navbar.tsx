@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Sun, Moon, ArrowLeft } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -6,6 +8,22 @@ import Image from 'next/image';
 
 export const Navbar: React.FC = () => {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Avoid hydration mismatch for theme-dependent icons
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between" />
+      </nav>
+    );
+  }
+
+  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
@@ -28,29 +46,28 @@ export const Navbar: React.FC = () => {
             {/* Logo Icon */}
             <div className="relative w-7 h-7 flex items-center justify-center">
               <Image 
-                src="/tinhdiem/enderbk'slabs.png" 
+                src="/enderbk'slabs.png" 
                 alt="Logo Icon" 
                 width={28} 
                 height={28}
                 className="object-contain"
-                onError={(e) => (e.currentTarget.style.display = 'none')}
+                priority
               />
             </div>
-            {/* Logo Text - This IS elabstext.png */}
+            {/* Logo Text - elabstext.png */}
             <div className="relative h-6 w-24">
               <Image 
-                src="/tinhdiem/elabstext.png" 
+                src="/elabstext.png" 
                 alt="EnderBK's Labs" 
                 fill
                 className="object-contain dark:invert"
                 priority
-                onError={(e) => (e.currentTarget.style.display = 'none')}
               />
             </div>
           </div>
           <div className="h-4 w-[1px] bg-gray-200 dark:bg-gray-700 mx-1" />
-          <h1 className="text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-nowrap">
-            Tính điểm và xếp hạng
+          <h1 className="text-xs font-bold text-gray-500 dark:text-gray-400 whitespace-nowrap hidden sm:block">
+            Tính điểm
           </h1>
         </div>
 
@@ -59,10 +76,10 @@ export const Navbar: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => setTheme(isDark ? 'light' : 'dark')}
             className="rounded-full w-9 h-9 p-0"
           >
-            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </Button>
         </div>
       </div>
