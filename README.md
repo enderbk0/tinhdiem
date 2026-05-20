@@ -3,7 +3,7 @@
 Ứng dụng tính điểm học sinh Việt Nam (Lớp 6 - 12) theo **Thông tư 22/2021/TT-BGDĐT**.
 
 ## Tính năng nổi bật
-- 🎨 **Giao diện Duolingo-style**: Thân thiện, hiện đại và mượt mà.
+- 🎨 **Giao diện**: Thân thiện, hiện đại và mượt mà.
 - 📐 **Tính toán chính xác**: Hỗ trợ đầy đủ công thức ĐTB môn học kỳ, cả năm và xếp loại.
 - 🚀 **Offline & PWA**: Hoạt động tốt ngay cả khi không có mạng.
 - 🛡️ **Bảo mật**: Dữ liệu chỉ lưu trên máy bạn (LocalStorage).
