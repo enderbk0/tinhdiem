@@ -52,3 +52,75 @@ input[type=number] {
 .glass {
   @apply bg-white/70 dark:bg-gray-900/70 backdrop-blur-md border border-white/20 dark:border-gray-800/50;
 }
+
+@media print {
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  /* Hide UI elements */
+  nav, footer, .fixed, .no-print, button, .recharts-legend-wrapper {
+    display: none !important;
+  }
+
+  /* Reset main container */
+  main, .flex-1 {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  body {
+    background-color: white !important;
+    color: black !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Optimize cards for BW printing */
+  .bg-gradient-to-br, .bg-blue-500, .bg-blue-700 {
+    background: none !important;
+    border: 2px solid black !important;
+    color: black !important;
+  }
+
+  .text-blue-100, .text-white {
+    color: black !important;
+  }
+
+  .shadow-2xl, .shadow-xl, .shadow-lg, .shadow-sm {
+    box-shadow: none !important;
+  }
+
+  .border-none {
+    border: 1px solid #ddd !important;
+  }
+
+  .rounded-3xl, .rounded-2xl {
+    border-radius: 8px !important;
+  }
+
+  /* Table styles */
+  .grid {
+    display: table !important;
+    width: 100% !important;
+  }
+
+  .grid > div {
+    display: table-row !important;
+  }
+
+  .grid > div > span {
+    display: table-cell !important;
+    padding: 8px !important;
+    border-bottom: 1px solid #eee !important;
+  }
+
+  /* Charts */
+  .recharts-responsive-container {
+    filter: grayscale(1) !important;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+  }
+}

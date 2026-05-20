@@ -43,57 +43,66 @@ export const StepResult: React.FC = () => {
     <div className="space-y-8 pb-20">
       {showConfetti && <Confetti width={windowSize.width} height={windowSize.height} recycle={false} numberOfPieces={500} />}
 
-      <div className="text-center space-y-4">
+      {/* Printable Header */}
+      <div className="hidden print:block border-b-2 border-black pb-4 mb-8">
+        <h1 className="text-2xl font-black uppercase">Bảng Điểm Học Sinh</h1>
+        <div className="flex justify-between text-sm mt-2 font-bold">
+          <span>Khối lớp: {gradeLevel}</span>
+          <span>Ngày xuất: {new Date().toLocaleDateString('vi-VN')}</span>
+        </div>
+      </div>
+
+      <div className="text-center space-y-4 print:mb-8">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: 'spring', damping: 10 }}
-          className="inline-block p-4 bg-yellow-100 rounded-full text-yellow-600 mb-2"
+          className="inline-block p-4 bg-yellow-100 rounded-full text-yellow-600 mb-2 print:hidden"
         >
           <Trophy size={48} />
         </motion.div>
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-black text-gray-800 dark:text-white"
+          className="text-4xl font-black text-gray-800 dark:text-white print:text-2xl"
         >
           Kết quả học tập
         </motion.h2>
-        <p className="text-gray-500 dark:text-gray-400">Chúc mừng bạn đã hoàn thành việc nhập điểm!</p>
+        <p className="text-gray-500 dark:text-gray-400 print:text-black">Dưới đây là tổng hợp kết quả học tập của bạn.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 print:flex print:flex-col print:gap-4">
         {/* Main Score Card */}
-        <Card className="lg:col-span-1 flex flex-col items-center justify-center p-8 space-y-6 bg-gradient-to-br from-blue-500 to-blue-700 text-white border-none shadow-2xl">
+        <Card className="lg:col-span-1 flex flex-col items-center justify-center p-8 space-y-6 bg-gradient-to-br from-blue-500 to-blue-700 text-white border-none shadow-2xl print:border-2 print:border-black print:text-black print:p-4">
           <div className="text-center">
-            <p className="text-blue-100 font-bold uppercase tracking-widest text-[10px]">Điểm trung bình</p>
+            <p className="text-blue-100 font-bold uppercase tracking-widest text-[10px] print:text-black">Điểm trung bình</p>
             <motion.div 
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-6xl font-black mt-1"
+              className="text-6xl font-black mt-1 print:text-4xl"
             >
               {result.overallAvg !== null && !isNaN(result.overallAvg) ? result.overallAvg.toString() : '--'}
             </motion.div>
           </div>
           
-          <div className="w-full h-px bg-blue-400/50" />
+          <div className="w-full h-px bg-blue-400/50 print:bg-black" />
           
           <div className="text-center space-y-0.5">
-            <p className="text-blue-100 font-bold uppercase tracking-widest text-[10px]">Xếp loại</p>
+            <p className="text-blue-100 font-bold uppercase tracking-widest text-[10px] print:text-black">Xếp loại</p>
             <p className="text-xl font-black">{result.rank || 'Chưa xếp loại'}</p>
           </div>
 
           {result.title !== 'Không' && (
-            <div className="bg-white/20 backdrop-blur-md p-3 rounded-xl w-full text-center flex items-center justify-center gap-2 border border-white/30">
-              <Star size={16} className="text-yellow-300 fill-yellow-300" />
-              <span className="font-black text-base">{result.title}</span>
-              <Star size={16} className="text-yellow-300 fill-yellow-300" />
+            <div className="bg-white/20 backdrop-blur-md p-3 rounded-xl w-full text-center flex items-center justify-center gap-2 border border-white/30 print:border-black print:bg-transparent">
+              <Star size={16} className="text-yellow-300 fill-yellow-300 print:hidden" />
+              <span className="font-black text-base uppercase">{result.title}</span>
+              <Star size={16} className="text-yellow-300 fill-yellow-300 print:hidden" />
             </div>
           )}
         </Card>
 
         {/* Charts */}
-        <Card className="lg:col-span-2 p-4 overflow-hidden flex flex-col">
+        <Card className="lg:col-span-2 p-4 overflow-hidden flex flex-col print:h-64">
           <h3 className="text-base font-bold mb-4">Biểu đồ môn học</h3>
           <div className="flex-1 w-full min-h-[250px] relative">
             <div className="absolute inset-0">
@@ -114,21 +123,21 @@ export const StepResult: React.FC = () => {
         </Card>
       </div>
 
-      {/* Detailed Table - Optimized for Desktop grid */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border-2 border-gray-100 dark:border-gray-800 shadow-lg overflow-hidden">
-        <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
-          <h3 className="font-bold text-sm">Chi tiết từng môn</h3>
-          <span className="text-[10px] text-gray-400 font-bold uppercase">Target: {target.toUpperCase()}</span>
+      {/* Detailed Table */}
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border-2 border-gray-100 dark:border-gray-800 shadow-lg overflow-hidden print:border-black print:rounded-none">
+        <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800 print:bg-white print:border-black">
+          <h3 className="font-bold text-sm">Chi tiết từng môn ({target.toUpperCase()})</h3>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-gray-100 dark:bg-gray-800">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-px bg-gray-100 dark:bg-gray-800 print:bg-white print:block">
           {subjects.map((s) => (
-            <div key={s.id} className="bg-white dark:bg-gray-900 p-3 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-              <span className="text-gray-600 dark:text-gray-400 text-xs font-medium">{s.name}</span>
+            <div key={s.id} className="bg-white dark:bg-gray-900 p-3 flex justify-between items-center print:border-b print:border-gray-200">
+              <span className="text-gray-600 dark:text-gray-400 text-xs font-medium print:text-black">{s.name}</span>
               <span className={cn(
                 "font-black text-sm",
                 typeof result.subjectAvgs[s.id] === 'number' 
                   ? (result.subjectAvgs[s.id] as number >= 8 ? "text-green-500" : result.subjectAvgs[s.id] as number >= 5 ? "text-blue-500" : "text-red-500")
-                  : (result.subjectAvgs[s.id] === 'Đạt' ? "text-green-500" : result.subjectAvgs[s.id] === 'Chưa đạt' ? "text-red-500" : "text-gray-300")
+                  : (result.subjectAvgs[s.id] === 'Đạt' ? "text-green-500" : result.subjectAvgs[s.id] === 'Chưa đạt' ? "text-red-500" : "text-gray-300"),
+                "print:text-black"
               )}>
                 {result.subjectAvgs[s.id] !== null && result.subjectAvgs[s.id] !== undefined ? (result.subjectAvgs[s.id] as any).toString() : '--'}
               </span>
@@ -138,23 +147,28 @@ export const StepResult: React.FC = () => {
       </div>
 
       {/* Disclaimer */}
-      <div className="flex gap-4 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-3xl border-2 border-blue-100 dark:border-blue-800/50">
-        <AlertCircle className="text-blue-500 shrink-0" />
-        <p className="text-sm text-blue-800 dark:text-blue-300 italic">
+      <div className="flex gap-4 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-3xl border-2 border-blue-100 dark:border-blue-800/50 print:bg-transparent print:border-black print:rounded-none">
+        <AlertCircle className="text-blue-500 shrink-0 print:hidden" />
+        <p className="text-sm text-blue-800 dark:text-blue-300 italic print:text-black">
           <strong>Lưu ý:</strong> Kết quả tính toán chỉ mang tính chất tham khảo. Có thể có chênh lệch hoặc sai sót nhỏ do làm tròn số hoặc thay đổi quy định của nhà trường.
         </p>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4 pt-8">
+      <div className="flex flex-wrap justify-center gap-4 pt-8 print:hidden">
         <Button variant="outline" className="gap-2" onClick={() => window.print()}>
-          <Download size={20} /> Xuất PDF
+          <Download size={20} /> Xuất PDF / In ấn
         </Button>
-        <Button variant="secondary" className="gap-2" onClick={() => {}}>
+        <Button variant="secondary" className="gap-2">
           <Share2 size={20} /> Chia sẻ
         </Button>
         <Button variant="danger" className="gap-2" onClick={resetAll}>
           <RotateCcw size={20} /> Làm lại từ đầu
         </Button>
+      </div>
+      
+      {/* Printable Footer */}
+      <div className="hidden print:block text-center mt-12 text-[10px] text-gray-400">
+        © {new Date().getFullYear()} EnderBK - Xuất từ ứng dụng VN Grade Calculator
       </div>
     </div>
   );
