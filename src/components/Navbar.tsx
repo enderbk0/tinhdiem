@@ -46,7 +46,7 @@ export const Navbar: React.FC = () => {
             {/* Logo Icon */}
             <div className="relative w-7 h-7 flex items-center justify-center">
               <Image 
-                src="/enderbk'slabs.png" 
+                src="/tinhdiem/enderbk'slabs.png" 
                 alt="Logo Icon" 
                 width={28} 
                 height={28}
@@ -57,7 +57,7 @@ export const Navbar: React.FC = () => {
             {/* Logo Text - elabstext.png */}
             <div className="relative h-6 w-24">
               <Image 
-                src="/elabstext.png" 
+                src="/tinhdiem/elabstext.png" 
                 alt="EnderBK's Labs" 
                 fill
                 className="object-contain dark:invert"
