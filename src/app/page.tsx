@@ -64,9 +64,12 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="py-6 border-t border-gray-100 dark:border-gray-800 text-center">
+      <footer className="py-6 border-t border-gray-100 dark:border-gray-800 text-center space-y-1">
         <p className="text-gray-400 text-sm font-bold">
           © {new Date().getFullYear()} EnderBK
+        </p>
+        <p className="text-[10px] text-gray-300 font-medium">
+          Licensed under GNU v3.0
         </p>
       </footer>
     </main>
