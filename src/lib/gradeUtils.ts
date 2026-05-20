@@ -48,6 +48,7 @@ export const evaluateResult = (
   let scoreCount = 0;
   let allAssessmentPass = true;
   let hasAssessment = false;
+  let assessmentSelectedCount = 0;
   
   const scores: number[] = [];
 
@@ -60,12 +61,14 @@ export const evaluateResult = (
 
     if (subject.type === 'assessment') {
       hasAssessment = true;
-      const status = semester === 'year' 
-        ? (grade.hk2.gk === 'Đạt' ? 'Đạt' : 'Chưa đạt') // Simple logic for assessment: use HK2 for year
-        : (semester === 'hk1' ? (grade.hk1.gk === 'Đạt' ? 'Đạt' : 'Chưa đạt') : (grade.hk2.gk === 'Đạt' ? 'Đạt' : 'Chưa đạt'));
+      const statusRaw = semester === 'year' 
+        ? grade.hk2.gk 
+        : (semester === 'hk1' ? grade.hk1.gk : grade.hk2.gk);
       
-      // Note: for assessment subjects, we use GK field to store 'Đạt'/'Chưa đạt' for simplicity in UI
+      const status = (statusRaw === 'Đạt' || statusRaw === 'Chưa đạt') ? statusRaw : null;
+      
       subjectAvgs[subject.id] = status;
+      if (status !== null) assessmentSelectedCount++;
       if (status === 'Chưa đạt') allAssessmentPass = false;
     } else {
       let avg: number | null = null;
@@ -93,44 +96,56 @@ export const evaluateResult = (
   let rank = 'Chưa xếp loại';
   let title = 'Không';
 
-  if (overallAvg !== null) {
-    if (mode === 'tt22') {
-      // TT22: Tốt, Khá, Đạt, Chưa đạt
-      const above65Count = scores.filter(s => s >= 6.5).length;
+  // If user hasn't entered enough data, don't rank yet
+  if (scoreCount === 0 && assessmentSelectedCount === 0) {
+    return { subjectAvgs, overallAvg, rank, title };
+  }
+
+  if (mode === 'tt22') {
+    // TT22: Tốt, Khá, Đạt, Chưa đạt
+    if (scoreCount > 0) {
       const above80Count = scores.filter(s => s >= 8.0).length;
+      const above65Count = scores.filter(s => s >= 6.5).length;
       const above50Count = scores.filter(s => s >= 5.0).length;
       const minScore = Math.min(...scores);
 
-      if (overallAvg >= 6.5 && above80Count >= 6 && allAssessmentPass) {
+      if (overallAvg! >= 6.5 && above80Count >= 6 && allAssessmentPass && minScore >= 5.0) {
         rank = 'Tốt';
-        if (overallAvg >= 9.0 && scores.every(s => s >= 6.5)) title = 'Học sinh Xuất sắc';
+        if (overallAvg! >= 9.0 && minScore >= 6.5) title = 'Học sinh Xuất sắc';
         else title = 'Học sinh Giỏi';
-      } else if (overallAvg >= 5.0 && above65Count >= 6 && allAssessmentPass) {
+      } else if (overallAvg! >= 5.0 && above65Count >= 6 && allAssessmentPass && minScore >= 3.5) {
         rank = 'Khá';
-      } else if (overallAvg >= 3.5 && above50Count >= 6) {
+      } else if (above50Count >= 6 && minScore >= 3.5 && (scores.filter(s => s < 5.0).length <= 1 || allAssessmentPass)) {
+        // Simple "Đạt" logic: most subjects >= 5.0, no one < 3.5
         rank = 'Đạt';
       } else {
         rank = 'Chưa đạt';
       }
-    } else {
-      // Traditional: Xuất sắc, Giỏi, Khá, Trung bình, Yếu, Kém
+    } else if (hasAssessment && assessmentSelectedCount > 0) {
+      // Only assessment subjects
+      rank = allAssessmentPass ? 'Đạt' : 'Chưa đạt';
+    }
+  } else {
+    // Traditional: Xuất sắc, Giỏi, Khá, Trung bình, Yếu, Kém
+    if (scoreCount > 0) {
       const mathAvg = subjectAvgs['math'] as number | null;
       const litAvg = subjectAvgs['literature'] as number | null;
-      const coreSubjectHigh = (mathAvg !== null && mathAvg >= criteria.minAvgExcellent) || (litAvg !== null && litAvg >= criteria.minAvgExcellent);
-      const coreSubjectGood = (mathAvg !== null && mathAvg >= criteria.minAvgGood) || (litAvg !== null && litAvg >= criteria.minAvgGood);
+      const hasCore8 = (mathAvg !== null && mathAvg >= 8.0) || (litAvg !== null && litAvg >= 8.0);
+      const hasCore65 = (mathAvg !== null && mathAvg >= 6.5) || (litAvg !== null && litAvg >= 6.5);
+      const hasCore5 = (mathAvg !== null && mathAvg >= 5.0) || (litAvg !== null && litAvg >= 5.0);
       const minScore = Math.min(...scores);
 
-      if (overallAvg >= 9.0 && coreSubjectHigh && minScore >= 8.0 && allAssessmentPass) {
+      if (overallAvg! >= 9.0 && hasCore8 && minScore >= 8.0 && allAssessmentPass) {
         rank = 'Xuất sắc';
         title = 'Học sinh Xuất sắc';
-      } else if (overallAvg >= 8.0 && coreSubjectHigh && minScore >= 6.5 && allAssessmentPass) {
+      } else if (overallAvg! >= 8.0 && hasCore8 && minScore >= 6.5 && allAssessmentPass) {
         rank = 'Giỏi';
         title = 'Học sinh Giỏi';
-      } else if (overallAvg >= 6.5 && coreSubjectGood && minScore >= 5.0 && allAssessmentPass) {
+      } else if (overallAvg! >= 6.5 && hasCore65 && minScore >= 5.0 && allAssessmentPass) {
         rank = 'Khá';
-      } else if (overallAvg >= 5.0 && minScore >= 3.5 && allAssessmentPass) {
+      } else if (overallAvg! >= 5.0 && hasCore5 && minScore >= 3.5 && allAssessmentPass) {
         rank = 'Trung bình';
-      } else if (overallAvg >= 3.5 && minScore >= 2.0) {
+      } else if (overallAvg! >= 3.5 && minScore >= 2.0) {
         rank = 'Yếu';
       } else {
         rank = 'Kém';
