@@ -59,16 +59,16 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Right Island: Theme Toggle */}
-        <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl border border-gray-200/50 dark:border-gray-700/50 rounded-full w-12 h-12 flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.12)] pointer-events-auto transition-all">
+        <nav className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl border border-gray-200/50 dark:border-gray-700/50 rounded-full w-14 h-14 flex items-center justify-center shadow-[0_8px_32px_rgba(0,0,0,0.15)] pointer-events-auto transition-all active:scale-95">
           <Button
             variant="ghost"
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="h-10 w-10 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all active:rotate-90 flex items-center justify-center"
+            className="h-12 w-12 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center group"
           >
             {isDark ? (
-              <Sun size={20} className="text-yellow-400 fill-yellow-400/20" />
+              <Sun size={28} className="text-yellow-400 fill-yellow-400/20 transition-transform group-hover:rotate-45" />
             ) : (
-              <Moon size={18} className="text-blue-600 fill-blue-600/10" />
+              <Moon size={24} className="text-blue-600 fill-blue-600/10 transition-transform group-hover:-rotate-12" />
             )}
           </Button>
         </nav>
